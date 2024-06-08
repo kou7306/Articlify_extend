@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PopUp</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+      .buttons {
+        display: flex;
+        text-align: center;
+      }
+      button {
+        width: 7rem;
+        background-color: #3498db;
+        color: #ffffff;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-radius: 0.25rem;
+        background-color: #2980b9;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      h1 {
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login-screen">
+      <h1>Login</h1>
+      <input id="input-id" />
+      <button id="login" class="button">Googleでログイン</button>
+    </div>
+
+    <div id="logged-in-screen">
+      <h1>このURLを保存しますか？</h1>
+      <div class="buttons">
+        <button id="save">保存する</button>
+        <button id="close">閉じる</button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
