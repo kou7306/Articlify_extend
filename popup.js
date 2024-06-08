@@ -22,61 +22,59 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: input_id }),
+      body: JSON.stringify({ uid: input_id }),
     })
       .then(function (response) {
         if (!response.ok) {
           throw new Error("API Request failed: " + response.status);
         }
         console.log("API Response: " + response.status);
-        response.json().then(function (data) {
-          // IDをクッキーに保存（セキュリティ上の観点から推奨されない）
-          document.cookie =
-            "user_id=" +
-            data.user_id +
-            "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-          console.log("User ID saved in cookie: " + data.user_id);
-          login_screen.style.display = "none";
-          loggedin_screen.style.display = "block";
-        });
+        document.cookie = input_id;
+        login_screen.style.display = "none";
+        loggedin_screen.style.display = "block";
+        return response.text();
       })
       .catch(function (error) {
-        console.error("API Request error: " + error);
+        alert("IDが間違っています");
       });
+  });
 
-    var save_button = document.getElementById("save");
-    save_button.addEventListener("click", function () {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        var current_url = tabs[0].url;
-        console.log("Current URL: " + current_url);
-        fetch("http://localhost:3001/api/summary?url=" + current_url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+  var save_button = document.getElementById("save");
+  save_button.addEventListener("click", function () {
+    // ボタンを無効化
+    save_button.disabled = true;
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      var userId = document.cookie;
+      var current_url = tabs[0].url;
+      console.log("Current URL: " + current_url);
+      fetch("http://localhost:3001/api/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userId, url: current_url }),
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("API Request failed: " + response.status);
+          }
+          console.log("API Response: " + response.status);
+          return response.text();
         })
-          .then(function (response) {
-            if (!response.ok) {
-              throw new Error("API Request failed: " + response.status);
-            }
-            console.log("API Response: " + response.status);
-            return response.text();
-          })
-          .then(function (data) {
-            console.log("Saved: " + data);
-            alert("保存しました");
-            window.close(); // ポップアップを閉じる
-          })
-          .catch(function (error) {
-            console.error("API Request error: " + error);
-            alert("保存に失敗しました");
-          });
-      });
+        .then(function (data) {
+          console.log("Saved: " + data);
+          alert("保存しました");
+          window.close(); // ポップアップを閉じる
+        })
+        .catch(function (error) {
+          console.error("API Request error: " + error);
+          alert("保存に失敗しました");
+        });
     });
+  });
 
-    var close_button = document.getElementById("close");
-    close_button.addEventListener("click", function () {
-      window.close(); // ポップアップを閉じる
-    });
+  var close_button = document.getElementById("close");
+  close_button.addEventListener("click", function () {
+    window.close(); // ポップアップを閉じる
   });
 });
