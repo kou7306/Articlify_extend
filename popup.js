@@ -17,8 +17,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // ユーザーが入力したIDを取得
     var input_id = document.getElementById("input-id").value;
     console.log("User ID: " + input_id);
-    fetch("http://localhost:3001/api/user_auth", {
+    fetch("https://articlify-one.vercel.app/api/user_auth", {
       method: "POST",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
@@ -47,8 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
       var userId = document.cookie;
       var current_url = tabs[0].url;
       console.log("Current URL: " + current_url);
-      fetch("http://localhost:3001/api/summary", {
+      fetch("https://articlify-one.vercel.app/api/summary", {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
